@@ -8,6 +8,8 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
+from rest_framework.authtoken.models import Token
+from django.utils.http import urlsafe_base64_decode
 
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -32,7 +34,9 @@ class SignUpView(generics.CreateAPIView):
 
     def get_verification_link(self, user):
         token = default_token_generator.make_token(user)
-        return f'http://your_frontend_verification_url/?token={token}'
+        user.verification_token = token
+        user.save()
+        return f'http://127.0.0.1:8000/verify/{token}/'
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]
@@ -43,9 +47,22 @@ class LoginView(APIView):
         user = User.objects.filter(email=email).first()
 
         if user and user.check_password(password):
-            # You can customize the response as needed
-            return Response({'token': user.auth_token.key, 'user_id': user.id}, status=status.HTTP_200_OK)
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({'token': token.key, 'user_id': user.id,'verified': user.is_verified}, status=status.HTTP_200_OK)
         else:
             return Response({'detail': 'Invalid credentials'}, status=status.HTTP_401_UNAUTHORIZED)
 
 
+class EmailVerificationView(APIView):
+    permission_classes = [permissions.AllowAny]
+
+    def get(self, request, token):
+        print(token,'token')
+        try:
+            user = User.objects.get(verification_token=token)
+        except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+            return Response({'detail': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        user.is_verified = True
+        user.save()
+        return Response({'detail': 'Email verified successfully.'}, status=status.HTTP_200_OK)
