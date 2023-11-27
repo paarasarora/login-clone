@@ -117,16 +117,6 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.mysql',
-#         'NAME': 'woro',
-#         'USER': 'root',
-#         'PASSWORD': '12345678',
-#         'HOST': 'localhost',
-#         'PORT': '3306'
-#     }
-# }
 
 DATABASES = {
     'default': {
@@ -134,7 +124,7 @@ DATABASES = {
         'NAME': 'worodb1',
         'USER': 'admin',
         'PASSWORD': '12345678',
-        'HOST': 'worodb.cxggr121bvwe.us-east-1.rds.amazonaws.com',
+        'HOST': 'worodb1.cxggr121bvwe.us-east-1.rds.amazonaws.com',
         'PORT': '3306'
     }
 }
