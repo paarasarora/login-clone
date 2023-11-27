@@ -7,9 +7,16 @@ from .serializers import UserSerializer,CreateUserSerializer
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.tokens import default_token_generator
-from django.core.exceptions import ValidationError
 from rest_framework.authtoken.models import Token
-from django.utils.http import urlsafe_base64_decode
+
+
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
+from allauth.socialaccount.providers.google.views import GoogleOAuth2Adapter
+from allauth.socialaccount.providers.oauth2.client import OAuth2Client
+# from allauth.socialaccount.views import LoginView
+
+
 
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -57,7 +64,6 @@ class EmailVerificationView(APIView):
     permission_classes = [permissions.AllowAny]
 
     def get(self, request, token):
-        print(token,'token')
         try:
             user = User.objects.get(verification_token=token)
         except (TypeError, ValueError, OverflowError, User.DoesNotExist):
