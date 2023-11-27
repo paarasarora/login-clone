@@ -36,14 +36,14 @@ class SignUpView(generics.CreateAPIView):
         subject = 'Email Verification'
         message = f'Thank you for registering. Please click the link below to verify your email.\n\n{self.get_verification_link(user)}'
         from_email = settings.EMAIL_HOST_USER
-        to_email = ['paarasarora2@gmail.com']
+        to_email = [user.email]
         send_mail(subject, message, from_email, to_email)
 
     def get_verification_link(self, user):
         token = default_token_generator.make_token(user)
         user.verification_token = token
         user.save()
-        return f'http://127.0.0.1:8000/verify/{token}/'
+        return f'http://127.0.0.1:8000/api/verify/{token}/'
 
 class LoginView(APIView):
     permission_classes = [permissions.AllowAny]

@@ -96,8 +96,8 @@ WSGI_APPLICATION = 'core.wsgi.application'
 AUTHENTICATION_CLASSES = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
-    # 'rest_framework.authentication.SessionAuthentication',
-    # 'rest_framework.authentication.TokenAuthentication',
+    'rest_framework.authentication.SessionAuthentication',
+    'rest_framework.authentication.TokenAuthentication',
 ]
 
 #social authentication
@@ -117,13 +117,24 @@ REST_FRAMEWORK = {
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.mysql',
+#         'NAME': 'woro',
+#         'USER': 'root',
+#         'PASSWORD': '12345678',
+#         'HOST': 'localhost',
+#         'PORT': '3306'
+#     }
+# }
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'woro',
-        'USER': 'root',
+        'NAME': 'worodb1',
+        'USER': 'admin',
         'PASSWORD': '12345678',
-        'HOST': 'localhost',
+        'HOST': 'worodb.cxggr121bvwe.us-east-1.rds.amazonaws.com',
         'PORT': '3306'
     }
 }
